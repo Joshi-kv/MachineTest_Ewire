@@ -25,7 +25,7 @@
                         <!-- Logo -->
                         <div id="logo" class=" uk-hidden@s">
                             <a href="home.html">
-                                <b><h1 style="text-transform: uppercase;">Social Book</h1></b>
+                                <b><h1 style="text-transform: uppercase;">Socio</h1></b>
                             </a>
                         </div>
 
@@ -89,7 +89,7 @@
                         <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
                             {% if user.is_authenticated %}
                             <ul>
-                                <li><a href=""> Account setting </a> </li>
+                                <li><a href="{% url 'home:settings' %}"> Account setting </a> </li>
                                 <li><a href="{% url 'user:logout' %}"> Log Out</a></li>
                             </ul>
                             {% else %}
