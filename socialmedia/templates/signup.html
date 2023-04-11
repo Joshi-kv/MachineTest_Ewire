@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
 
+
 </head>
 
 <body class="bg-gray-100">
@@ -32,12 +33,12 @@
                 <div class="flex items-center lg:justify-between justify-around">
 
                     <a href="trending.html">
-                        <b><h1 style="font-size: 1.5rem;">Socol</h1></b>
+                        <b><h1 style="font-size: 1.5rem;">Socio</h1></b>
                     </a>
 
                     <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
                         
-                        <a href="signin.html" class="bg-pink-500 pink-500 px-6 py-3 rounded-md shadow text-white">Login</a>
+                        <a href="{% url 'user:login' %}" class="bg-pink-500 pink-500 px-6 py-3 rounded-md shadow text-white">Login</a>
                     </div>
 
                 </div>
@@ -48,26 +49,35 @@
 
         <div>
             <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
-                <h1 class="lg:text-3xl text-xl font-semibold mb-6"> Sign in</h1>
-                <!--<p class="mb-2 text-black text-lg"> Register to manage your account </p>-->
-                <form action="index.html">
-                    <!--<div class="flex lg:flex-row flex-col lg:space-x-2">
-                        <input type="text" placeholder="First Name"  class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                        <input type="text" placeholder="Last Name" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                    </div>-->
-                    <input type="text" placeholder="Username" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                    <input type="text" placeholder="Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                    <input type="text" placeholder="Confirm Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                <h1 class="lg:text-3xl text-xl font-semibold mb-6"> Sign Up</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+
+                    {% if messages %}
+                    {% for message in messages  %}
+                    <div class="error-div">
+                        <h2 class="email-error">
+                            {{message}}
+                        </h2>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <input type="text" name='firstname' placeholder="First Name" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <input type="text" name='lastname' placeholder="Last Name" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <input type="text" name='username' placeholder="Username" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <input type="email"  name='email' placeholder="Email" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <span class="email-error"></span>   
+                    <input type="text"  name='phone' placeholder="Mobile" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <span class="mobile-error"></span>
+                    <input type="password" name='password' placeholder="Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
+                    <span class="password-error "></span>
+                    <input type="password" name='password2' placeholder="Confirm Password" class="bg-gray-200 mb-2 shadow-none  dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
                     <div class="flex justify-start my-4 space-x-1">
-                        <div class="checkbox">
-                            <input type="checkbox" id="chekcbox1" checked>
-                            <label for="chekcbox1"><span class="checkbox-icon"></span> I Agree</label>
-                        </div>
-                        <a href="#"> Terms and Conditions</a>
                     </div>
                     <button type="submit" class="bg-gradient-to-br from-pink-500 py-3 rounded-md text-white text-xl to-red-400 w-full">Login</button>
                     <div class="text-center mt-5 space-x-2">
-                        <p class="text-base"> Do you have an account? <a href="form-login.html"> Login </a></p>
+                        <p class="text-base"> Do you have an account? <a href="{% url 'user:login' %}"> Login </a></p>
                     </div>
                 </form>
             </div>
@@ -83,51 +93,85 @@
                     <a href="#"> Terms</a>
                     <a href="#"> Privacy</a>
                 </div>
-                <p class="capitalize"> © copyright 2020 by socol</p>
             </div>
         </div>
 
     </div>
 
-    <!--<script>
+    <script>
+        function validateEmail(email) {
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return regex.test(email);
+        }
+      
+        function validatePassword(password) {
+            //  regular expression to match the password format
+            const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+={}|[\]\\:;'<>,./?]).{7,}$/;
+            
+            // Test the password against the regular expression
+            return regex.test(password);
+          }
+        function validatePhoneNumber(phoneNumber) {
+          const regex = /^\d{10}$/;
+          return regex.test(phoneNumber);
+        }
+      
+        const form = document.querySelector('form');
+        const emailInput = document.querySelector('input[name="email"]');
+        const passwordInput = document.querySelector('input[name="password"]');
+        const mobileInput = document.querySelector('input[name="phone"]');
+        const emailError = document.querySelector('.email-error');
+        const passwordError = document.querySelector('.password-error');
+        const mobileError = document.querySelector('.mobile-error');
         
-        (function (window, document, undefined) {
-            'use strict';
-            if (!('localStorage' in window)) return;
-            var nightMode = localStorage.getItem('gmtNightMode');
-            if (nightMode) {
-                document.documentElement.className += ' dark';
-            }
-        })(window, document);
-    
-    
-        (function (window, document, undefined) {
-    
-            'use strict';
-    
-            // Feature test
-            if (!('localStorage' in window)) return;
-    
-            // Get our newly insert toggle
-            var nightMode = document.querySelector('#night-mode');
-            if (!nightMode) return;
-    
-            // When clicked, toggle night mode on or off
-            nightMode.addEventListener('click', function (event) {
-                event.preventDefault();
-                document.documentElement.classList.toggle('dark');
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.setItem('gmtNightMode', true);
-                    return;
-                }
-                localStorage.removeItem('gmtNightMode');
-            }, false);
-    
-        })(window, document);
-    </script>-->
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          const email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
+          const mobile = mobileInput.value.trim();
+          
+          if (!validateEmail(email)) {
+            emailError.innerHTML = 'Please enter a valid email address.';
+            emailInput.classList.add('error');
+            emailInput.focus();
+            return false;
+          } else {
+            emailError.innerHTML = '';
+            emailInput.classList.remove('error');
+          }
+          
+          if (!validatePassword(password)) {
+            passwordError.innerHTML = 'Please enter a valid password with the following criteria:<br>' +
+                                        '- At least 7 characters<br>' +
+                                        '- At least one digit<br>' +
+                                        '- At least one lowercase letter<br>' +
+                                        '- At least one uppercase letter<br>';
 
-    <!-- Scripts
-    ================================================== -->
+            passwordInput.classList.add('error');
+            passwordInput.focus();
+            return false;
+          } else {
+            passwordError.innerHTML = '';
+            passwordInput.classList.remove('error');
+          }
+          
+          if (!validatePhoneNumber(mobile)) {
+            mobileError.innerHTML = 'Please enter a valid 10-digit mobile number.';
+            mobileInput.classList.add('error');
+            mobileInput.focus();
+            return false;
+          } else {
+            mobileError.innerHTML = '';
+            mobileInput.classList.remove('error');
+          }
+          
+          // If all validations pass, submit the form
+          form.submit();
+        });
+      </script>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>
     <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static 'assets/js/uikit.js' %}"></script>

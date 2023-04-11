@@ -146,6 +146,16 @@ a.button i[class^="icon-feather"] {
   margin-left: 3px;
 }
 
+.error {
+  border: 2px solid red;
+}
+
+.email-error, .password-error, .mobile-error {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
 /* Bookmark Button */
 span.bookmark-icon {
