@@ -27,7 +27,8 @@
 	<section>
 			<div class="feature-photo">
 				<figure><img src="{% static 'images/resources/timeline-1.jpg' %}" alt=""></figure>
-				<form>
+				<form action="{% url 'home:follow' %}" method="POST">
+					{% csrf_token %}
 					<div class="add-btn">
 					<span style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Home</a></u></b></span>
 					{% if post_length == 1 %}
@@ -37,20 +38,23 @@
 					{% else %}
 					<span style="color: white; font-size: 27px;"><b>{{post_length}} Posts</b></span>
 					{% endif %}
-					<span style="color: white; font-size: 27px;"><b>1.7m followers</b></span>
-					<span style="color: white; font-size: 27px;"><b>3.5k following</b></span>
-					<a href="" title="" data-ripple=""><button style="background-color: #ffc0cb; border: #ffc0cb;">Follow</button></a>
-					
-					</div>
+					<input type="hidden" name="follower" value="{{user.username}}">
+					<input type="hidden" name="following" value="{{user_profile.user}}">	
+					{% if user_follower == 1 %}
+					<span style="color: white; font-size: 27px;"><b>{{user_follower}} follower</b></span>
+					{% elif user_follower == 0 %}
+					<span style="color: white; font-size: 27px;"><b>{{user_follower}} follower</b></span>
+					{% else %}
+					<span style="color: white; font-size: 27px;"><b>{{user_follower}} followers</b></span>
+					{% endif %}
+					<span style="color: white; font-size: 27px;"><b>{{user_following}} following</b></span>
+					{% if user_object.username == user.username %}
+					<a href="{% url 'home:settings' %}"  data-ripple="">Account settings</button></a>
+					{% else %}
+					<a  data-ripple=""><button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button}}</button></a>
+					{% endif %}
+					</div>	
 				</form>
-
-				<!-- <form class="edit-phto">
-					<i class="fa fa-camera-retro"></i>
-					<label class="fileContainer">
-						Upload Cover Photo
-					<input type="file"/>
-					</label>
-				</form> -->
 				<div class="container-fluid">
 					<div class="row merged">
 						<div class="col-lg-2 col-sm-3">

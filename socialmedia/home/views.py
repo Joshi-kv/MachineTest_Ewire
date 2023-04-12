@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from . models import Profile,Post,PostLike
+from . models import Profile,Post,PostLike,FollowersCount
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -103,10 +103,42 @@ def profile(request,pk):
     user_profile = Profile.objects.get(user=user_object)
     user_post = Post.objects.filter(user=pk)
     post_length = len(user_post)
+    
+    follower = request.user.username
+    user = pk
+    
+    if FollowersCount.objects.filter(follower=follower,user=user).first():
+        button = 'Unfollow'
+    else:
+        button = 'Folllow'
+    
+    user_follower = len(FollowersCount.objects.filter(user=pk))
+    user_following = len(FollowersCount.objects.filter(follower=pk))
+    
     context = {
         'user_object' : user_object,
         'user_profile' : user_profile,
         'user_post' : user_post,
         'post_length' : post_length,
+        'button' : button,
+        'user_follower' : user_follower,
+        'user_following' : user_following,
     }
     return render(request,'profile.html',context)
+
+
+
+def follow(request):
+    if request.method == 'POST' : 
+        follower = request.POST['follower']
+        user = request.POST['following']
+        if FollowersCount.objects.filter(follower=follower,user=user).first():
+            delete_follower = FollowersCount.objects.get(follower=follower,user=user)
+            delete_follower.delete()
+            return redirect('/profile/'+user)
+        else:
+            new_follower = FollowersCount.objects.create(follower=follower,user=user)
+            new_follower.save()
+            return redirect('/profile/'+user)
+
+    return redirect('home:index')
