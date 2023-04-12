@@ -176,6 +176,12 @@ span.bookmark-icon {
   line-height: 27px;
 }
 
+.title{
+  text-transform: capitalize;
+  font-weight: 500;
+
+}
+
 .bookmark-icon.bookmarked {
   -webkit-animation: bookmarked-shadow 0.3s;
           animation: bookmarked-shadow 0.3s;

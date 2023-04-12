@@ -8,8 +8,10 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
+    posts = Post.objects.all()
     context = {
-        'user_profile' : user_profile
+        'user_profile' : user_profile,
+        'posts' : posts,
     }
     return render(request,'index.html',context)
 
@@ -69,3 +71,8 @@ def upload(request):
         print(tags)
         new_post.save()
     return redirect('home:index')
+
+def delete_post(request,post_id):
+    post = Post.objects.get(id=post_id)
+    post.delete()
+    return redirect('home:index',)
