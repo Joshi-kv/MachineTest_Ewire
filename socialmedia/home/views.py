@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from . models import Profile,Post
+from . models import Profile,Post,PostLike
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -76,3 +76,24 @@ def delete_post(request,post_id):
     post = Post.objects.get(id=post_id)
     post.delete()
     return redirect('home:index',)
+
+def like_post(request):
+    
+    username = request.user.username
+    post_id = request.GET.get('post_id')
+
+    post = Post.objects.get(id=post_id)
+
+    like_filter = PostLike.objects.filter(post_id=post_id, username=username).first()
+
+    if like_filter == None:
+        new_like = PostLike.objects.create(post_id=post_id, username=username)
+        new_like.save()
+        post.post_like = post.post_like+1
+        post.save()
+        return redirect('home:index')
+    else:
+        like_filter.delete()
+        post.post_like = post.post_like-1
+        post.save()
+        return redirect('home:index')

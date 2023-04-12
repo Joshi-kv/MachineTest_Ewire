@@ -2437,7 +2437,10 @@ body{  font-family: inter, sans-serif !important
   }
 
   .lg\:w-5\/12{
-    width: 41.666667%;
+    width: 30%;
+    position: absolute;
+    top: 6rem;
+    right: 3rem;
   }
 
   .lg\:w-7\/12{
