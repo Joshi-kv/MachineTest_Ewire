@@ -48,7 +48,7 @@
 
                     <div class="right-side lg:pr-4">
                          <!-- upload -->
-                        <b class='mr-4'>@{{user.username}}</b>&nbsp;
+                        <a href="{% url 'home:profile' user_profile.user %}"><b class='mr-4'>@{{user.username}}</b>&nbsp;</a>
                         <a href="#"
                             class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
                             <ion-icon name="add-circle" class="-mb-1
@@ -123,7 +123,7 @@
 
             <div class="container m-auto">
 
-                    <div class="space-y-5 flex-shrink-0 lg:w-7/12">
+                    <div class="space-y-5 flex-shrink-0 lg:w-7/12 mb-5">
 
                         
                         {% for post  in posts reversed %}
@@ -133,30 +133,39 @@
                             <!-- post header-->
                             <div class="flex justify-between items-center px-4 py-3">
                                 <div class="flex flex-1 items-center space-x-4">
-                                    <a href="#">
-                                        <div class="bg-gradient-to-tr from-yellow-600 to-pink-600 p-0.5 rounded-full">  
-                                            <img src="{{request.user.profile_image.url}}" class=" bg-gray-200 border border-white rounded-full w-8 h-8">
+                                    <a href="{% url 'home:profile' post.user %}">
+                                        <div class=" from-yellow-600 to-pink-600 p-0.5 rounded-full"> 
+                                             
+                                            <img src="{{user_profile.profile_image.url}}" class=" bg-gray-200 border border-white rounded-full w-8 h-8">
+                                            <span class="block  font-semibold "> @{{post.user}} <br> 
                                         </div>
-                                    </a>
-                                    <span class="block  font-semibold "> @{{post.user}} <br><p class="title">{{post.title}}</p></span>     
+                                    </a><br>
+                                    
                                 </div>
+                                
+                                
                               <div>
                                 <a href="#"> <i class="icon-feather-more-horizontal text-2xl hover:bg-gray-200 rounded-full p-2 transition -mr-1 "></i> </a>
-                                <div class="bg-white w-56 shadow-md mx-auto p-2 mt-12 rounded-md text-gray-500 hidden text-base border border-gray-100  " uk-drop="mode: hover;pos: top-right">
-                              
-                                    <ul class="space-y-1">
-                                      <li> 
-                                          <a href="{% url 'home:delete' post.id %}" class="flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
-                                           <i class="uil-trash-alt mr-1"></i>  Delete
-                                          </a> 
-                                      </li>
-                                    </ul>
                                 
-                                </div>
+                                    {% if user.is_authenticated %}
+                                        {% if post.user == request.user.username %}
+                                     <div class="bg-white w-56 shadow-md mx-auto p-2 mt-12 rounded-md text-gray-500 hidden text-base border border-gray-100  " uk-drop="mode: hover;pos: top-right">
+                                        
+                                        <ul class="space-y-1">
+                                            <li> 
+                                                <a href="{% url 'home:delete' post.id %}" class="flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+                                                <i class="uil-trash-alt mr-1"></i>  Delete
+                                                </a> 
+                                            </li>
+                                            </ul>
+                                        </div>    
+                                        {% endif %}
+                                    {% endif %}
                               </div>
                             </div>
     
                             <div uk-lightbox>
+                                <p class="title " style="margin-left:1rem;margin-bottom:1rem;">{{post.title}}</p></span> 
                                 <a href="{{post.post_image.url}}">  
                                     <img src="{{post.post_image.url}}" alt="">
                                 </a>
@@ -192,21 +201,12 @@
                                         {% else %}
                                         <p>Liked by {{post.post_like}} people</p>
                                         {% endif %}
+                                        Posted on {{post.post_date}}
                                     </b>
                                 </div>
                                 <div class="tags">
                                     <p>{{post.tag}}</p>
                                     <p>{{post.description}}</p>
-                                </div>
-                                <div class="flex items-center space-x-3"> 
-                                    <div class="flex items-center">
-                                        <img src="{% static 'assets/images/avatars/avatar-1.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white ">
-                                        <img src="{% static 'assets/images/avatars/avatar-4.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
-                                        <img src="{% static 'assets/images/avatars/avatar-2.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
-                                    </div>
-                                    <div class="">
-                                        Liked <strong> taiye</strong> and <strong> 209 Others </strong>
-                                    </div>
                                 </div>
     
                             </div>

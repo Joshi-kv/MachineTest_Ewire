@@ -97,3 +97,16 @@ def like_post(request):
         post.post_like = post.post_like-1
         post.save()
         return redirect('home:index')
+    
+def profile(request,pk):
+    user_object = User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+    user_post = Post.objects.filter(user=pk)
+    post_length = len(user_post)
+    context = {
+        'user_object' : user_object,
+        'user_profile' : user_profile,
+        'user_post' : user_post,
+        'post_length' : post_length,
+    }
+    return render(request,'profile.html',context)

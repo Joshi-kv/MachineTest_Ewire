@@ -23,7 +23,7 @@ class Post(models.Model):
     post_image = models.ImageField(upload_to='post_image')
     description = models.TextField(blank=True)
     tag = models.CharField(max_length=500)
-    post_date = models.DateTimeField(auto_now_add=True)
+    post_date = models.DateField(auto_now_add=True)
     post_like = models.PositiveIntegerField(default=0)
     
     def __str__(self):
