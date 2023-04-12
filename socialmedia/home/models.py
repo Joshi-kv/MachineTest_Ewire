@@ -14,3 +14,17 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'{self.user.username}'
+    
+class Post(models.Model):
+    user = models.CharField(max_length=100)
+    title = models.CharField(max_length=300)
+    post_image = models.ImageField(upload_to='post_image')
+    description = models.TextField(blank=True)
+    tag = models.CharField(max_length=500)
+    post_date = models.DateTimeField(auto_now_add=True)
+    post_like = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f'{self.title}'
+    
+    
