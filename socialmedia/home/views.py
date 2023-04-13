@@ -159,7 +159,6 @@ def search(request):
         for users in username_object:
             username_profile.append(users.id)
             
-            print(users,username_profile)
             
        
         for ids in username_profile:
