@@ -1,3 +1,4 @@
+from itertools import chain
 from django.shortcuts import redirect, render
 from . models import Profile,Post,PostLike,FollowersCount
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ def index(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
     posts = Post.objects.all()
+    friend_profile = Profile.objects.all()
     context = {
         'user_profile' : user_profile,
         'posts' : posts,
@@ -142,3 +144,33 @@ def follow(request):
             return redirect('/profile/'+user)
 
     return redirect('home:index')
+
+def search(request):
+    user_object = User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        username_object = User.objects.filter(username__icontains=username)
+
+        username_profile = []
+        username_profile_list = []
+
+        for users in username_object:
+            username_profile.append(users.id)
+            
+            print(users,username_profile)
+            
+       
+        for ids in username_profile:
+            profile_lists = Profile.objects.filter(id_user=ids)
+            username_profile_list.append(profile_lists)
+        
+        username_profile_list = list(chain(*username_profile_list))
+
+    context = {
+        'username' : username,
+        'user_profile' : user_profile,
+        'username_profile_list' : username_profile_list,
+     }
+    return render(request,'search.html',context)

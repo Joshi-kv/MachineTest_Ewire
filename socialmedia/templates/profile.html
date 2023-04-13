@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/color.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-
+	<link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
 </head>
 <body>
 <!--<div class="se-pre-con"></div>-->
@@ -107,23 +108,57 @@
 
 
 
-							<div class="col-lg-6">
+							{% comment %} <div class="col-lg-6">
 								<div class="central-meta">
 									<ul class="photos">
 				
-										{% for post in user_post  %}
-										
-										<li>
-											<a class="strip" href={{post.post_image.url}} title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
-											<img src={{post.post_image.url}} style="height: 250px; width: 300px;" alt=""></a>
-										</li>
 
-										{% endfor %}
 										
 									</ul>
 									<!--<div class="lodmore"><button class="btn-view btn-load-more"></button></div>-->
 								</div><!-- photos -->
-							</div><!-- centerl meta -->
+							</div><!-- centerl meta --> {% endcomment %}
+							<div class="container">
+								<div class="row">
+									{% for post in  user_post  %}
+									<div class="col-md-4">
+											<div class="card" style="width: 18rem;">
+												<a class="strip" href={{post.post_image.url}} title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
+												<img src={{post.post_image.url}} style="height: 250px; width: 300px;" alt=""></a>
+												<div class="card-body">
+												  <h5 class="card-title">{{post.title}}</h5>
+												  {% if post.post_like == 1 or post.post_like == 0 %}
+												  liked by {{post.post_like}} person
+													{% else %}
+													liked by {{post.post_like}} persons
+												  {% endif %}
+												</div>
+												{% if user.is_authenticated %}
+												{% if post.user == request.user.username %}
+													
+													<a href="{% url 'home:delete' post.id %}" class="flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+														<button style="background-color: #ffc0cb; border: #ffc0cb;">Delete</button>
+													</a>   
+												{% endif %}
+												{% endif %}
+											  </div>	
+										</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+							{% comment %} <div class="card">
+								<div class="card-body">
+									{% for post in user_post  %}
+							
+									<div class="card">
+										<li>
+											
+										</li>
+									</div>
+
+									{% endfor %}
+								</div> {% endcomment %}
 							<div class="col-lg-3">
 								<aside class="sidebar static">
 									

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+    <script src="https://kit.fontawesome.com/1833d82ae9.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -34,14 +35,13 @@
                         </div>-->
 
                         <div class="header_search">
-                            <input type="text" placeholder="Search for username..">
-                            <div class="icon-search">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
+                            <form action="{% url 'home:search' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="text" name='username' placeholder="Search for username..">
+                                <div class="icon-search">
+                                    <button type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </form>
                         </div>
 
                     </div>
@@ -136,7 +136,7 @@
                                     <a href="{% url 'home:profile' post.user %}">
                                         <div class=" from-yellow-600 to-pink-600 p-0.5 rounded-full"> 
                                              
-                                            <img src="{{user_profile.profile_image.url}}" class=" bg-gray-200 border border-white rounded-full w-8 h-8">
+                                            {% comment %} <img src="{{friend_profile.user.profile_image.url}}" class=" bg-gray-200 border border-white rounded-full w-8 h-8"> {% endcomment %}
                                             <span class="block  font-semibold "> @{{post.user}} <br> 
                                         </div>
                                     </a><br>

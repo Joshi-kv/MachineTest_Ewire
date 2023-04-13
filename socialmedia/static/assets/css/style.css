@@ -1598,7 +1598,7 @@ header .header_inner .left-side .header_search .icon-search {
   position: absolute;
   top: 0;
   left: 0;
-  margin-left: -.75rem;
+  margin-left: 12rem;
   height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
