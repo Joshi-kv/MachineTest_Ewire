@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from . models import Profile,Post,PostLike,FollowersCount
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+import random
 # Create your views here.
 
 @login_required(login_url='user:login')
@@ -26,10 +26,41 @@ def index(request):
     
     feed_list = list(chain(*feed))
     
+    # user suggestion
+    
+    all_users = User.objects.all()
+    user_following_all = []
+    
+    for user in user_following :
+        user_list = User.objects.get(username=user.user)
+        user_following_all.append(user_list)
+        
+    new_suggestion_list = [x for x in all_users if x not in user_following_all]
+    current_user = User.objects.filter(username=request.user.username)
+    final_suggestion_list = [x for x in new_suggestion_list if x not in current_user and not x.is_staff]
+    random.shuffle(final_suggestion_list)
+    
+    
+    username_profile = []
+    username_profile_list = []
+
+    for users in final_suggestion_list:
+        username_profile.append(users.id)
+        
+        
+    
+    for ids in username_profile:
+        profile_lists = Profile.objects.filter(id_user=ids)
+        username_profile_list.append(profile_lists)
+    
+    suggestion_profile_list = list(chain(*username_profile_list[:4]))
+    
+    print(suggestion_profile_list)
     
     context = {
         'user_profile' : user_profile,
         'posts' : feed_list,
+        'user_suggestion' : suggestion_profile_list,
     }
     return render(request,'index.html',context)
 
