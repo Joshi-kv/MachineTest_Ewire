@@ -3,17 +3,33 @@ from django.shortcuts import redirect, render
 from . models import Profile,Post,PostLike,FollowersCount
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 @login_required(login_url='user:login')
 def index(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
-    posts = Post.objects.all()
-    friend_profile = Profile.objects.all()
+    # posts = Post.objects.all()
+    
+    user_following_list = []
+    feed = []
+    
+    user_following = FollowersCount.objects.filter(follower=request.user.username)
+    
+    for users in user_following : 
+        user_following_list.append(users.user)
+        
+    for usernames in user_following_list :
+        feed_lists = Post.objects.filter(user=usernames)
+        feed.append(feed_lists)
+    
+    feed_list = list(chain(*feed))
+    
+    
     context = {
         'user_profile' : user_profile,
-        'posts' : posts,
+        'posts' : feed_list,
     }
     return render(request,'index.html',context)
 
