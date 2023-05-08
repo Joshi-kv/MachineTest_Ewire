@@ -1,4 +1,4 @@
-# MachineTest_Ewire
+# django social media application
 it is a socialmedia project   
 in this user can create their account 
 user can login to their account
